@@ -24,15 +24,16 @@ let game = new Phaser.Game(config);
 //let rect;
 //let rect_dir = 1;
 
-let canvas_bg;
+let canvas_bg, eggcups_bg;
 
-let huevera_b, huevera_m, huevera_d
+let huevera_b, huevera_m, huevera_d;
 let hueveras_x = 128;
 
-let huevo_b, huevo_m, huevo_d
+let huevo_b, huevo_m, huevo_d;
 
 let sprite_scale = .1;
 
+let huevo_shadow;
 
 function precarga ()
 {
@@ -52,6 +53,7 @@ function crea ()
 	canvas_bg = this.add.image(canvas_w/2, canvas_h/2, 'grass_bg');
 
 	eggcups_bg = this.add.image(hueveras_x, canvas_h/2, 'straw_bg');
+	eggcups_bg.setScale(.5);
 	eggcups_bg.angle = 90;
 	
 	huevera_m = this.add.image(hueveras_x, canvas_h/2, 'huevera');
@@ -65,64 +67,112 @@ function crea ()
  	huevera_d.setScale(sprite_scale);
 	huevera_d.setTint(dorado);
 
+	huevo_shadow = this.add.image(-10000, -1000, 'huevo');
+	huevo_shadow.setTint("#000000");
+	huevo_shadow.alpha = .5;
+	huevo_shadow.setScale(.030);
+
 	huevo_m = this.add.image(500, 100, 'huevo');
 	huevo_m.setScale(.025);
 	huevo_m.setTint(marron);
+
 	huevo_m.on('pointerdown', function(){
+	
 	console.log("Huevo Marron")
 	this.setScale(.030);
+	
 	});
-	huevo_m.setInteractive({
-  	draggable: true
-  });
-  this.input.on('drag', function(pointer, object, x, y){
-  	object.x = x;
-  	object.y = y;
-  });
- 	this.input.on('dragend',function (pointer, object, x, y){
-  	object.setScale(.025);
- 	});
 
+	huevo_m.setInteractive({
+  	
+		draggable: true
+  
+	});
+ 
+ 	this.input.on('drag', function (pointer, object, x, y) {
+		
+		object.x = x;
+		object.y = y;
+		huevo_shadow.x = x + 8;
+		huevo_shadow.y = y + 8;
+
+		if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_m.getBounds(), object.getBounds())){
+			console.log("Huevo dentro de huevera!!!");
+		}
+	});
+
+	this.input.on('dragend', function (pointer, object, x, y) {
+		object.setScale(1);
+		huevo_shadow.x = -10000;
+		huevo_shadow.y = -10000;
+	});
 
 	huevo_b = this.add.image(400, 100, 'huevo');
-  huevo_b.setScale(.025);
-  huevo_b.on('pointerdown', function(){
- 	console.log("Huevo Blanco")
-	this.setScale(.030);
- 	});
-	huevo_b.setInteractive({
-  	draggable: true
-  });
-  this.input.on('drag', function(pointer, object, x, y){
-  	object.x = x;
-  	object.y = y;
-  });
- 	this.input.on('dragend',function (pointer, object, x, y){
-  	object.setScale(.025);
- 	});
+	huevo_b.setScale(.025);
+
+	huevo_b.setInteractive({ draggable:true });
+
+	huevo_b.on('pointerdown', function (){
+		console.log("Huevo blanco");
+
+		huevo_shadow.x = this.x + 8;
+		huevo_shadow.y = this.y + 8;
+
+
+		this.setScale(.030);
+	});
+
+	this.input.on('drag', function (pointer, object, x, y) {
+		object.x = x;
+		object.y = y;
+		huevo_shadow.x = x + 8;
+		huevo_shadow.y = y + 8;
+
+		if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_b.getBounds(), object.getBounds())){
+			console.log("Huevo dentro de huevera!!!");
+		}
+	});
+	this.input.on('dragend', function (pointer, object, x, y) {
+		object.setScale(.025);
+		huevo_shadow.x = -10000;
+		huevo_shadow.y = -10000;
+	});
+
 
 
 	huevo_d = this.add.image(600, 100, 'huevo');
- 	huevo_d.setScale(.025);
- 	huevo_d.setTint(dorado);
- 	huevo_d.on('pointerdown', function(){
-  console.log("Huevo Dorado")
-	this.setScale(.030);
- 	});
-	huevo_d.setInteractive({
- 		draggable: true
- 	});
- 	this.input.on('drag', function(pointer, object, x, y){
- 		object.x = x;
- 		object.y = y;
+	huevo_d.setTint(dorado);
+	huevo_d.setScale(.025);
 
-		if(Phaser.Geom.Intersects.RectangleToRectangle(huevera_d.getBounds())){
+	huevo_d.setInteractive({ draggable:true });
+
+	huevo_d.on('pointerdown', function (){
+		console.log("Huevo dorado");
+
+		huevo_shadow.x = this.x + 8;
+		huevo_shadow.y = this.y + 8;
+
+
+		this.setScale(.030);
+	});
+
+	this.input.on('drag', function (pointer, object, x, y) {
+		object.x = x;
+		object.y = y;
+		huevo_shadow.x = x + 8;
+		huevo_shadow.y = y + 8;
+
+		if (Phaser.Geom.Intersects.RectangleToRectangle(huevera_d.getBounds(), object.getBounds())){
 			console.log("Huevo dentro de huevera!!!");
 		}
- 	});
- 	this.input.on('dragend',function (pointer, object, x, y){
-  	object.setScale(.025);
- 	});
+	});
+
+	this.input.on('dragend', function (pointer, object, x, y) {
+		object.setScale(.025);
+		huevo_shadow.x = -10000;
+		huevo_shadow.y = -10000;
+	});
+
 
 }
 
